@@ -1,0 +1,66 @@
+<div class="navbar">
+  <div class="title"><span>Path Visualiser</span></div>
+  <div class="container">
+    <app-maze-algo-menu></app-maze-algo-menu>
+    <app-path-algo-menu></app-path-algo-menu>
+  </div>
+
+  <button
+    class="visualize"
+    mat-raised-button
+    color="primary"
+    [disabled]="isVisualize"
+    (click)="visualizePath()"
+  >
+    Visualize {{ this.curPathAlgo }}
+  </button>
+
+  <div class="container">
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="isVisualize"
+      (click)="resetBoard()"
+    >
+      Reset Board
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="isVisualize"
+      (click)="clearBoard()"
+    >
+      Clear Board
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="isVisualize"
+      (click)="clearPath()"
+    >
+      Clear Path
+    </button>
+  </div>
+</div>
+
+<!-- <mat-form-field appearance="fill">
+    <mat-label>Maze Algorithems</mat-label>
+    <mat-select [(value)]="curMazeAlgo" (valueChange)="seCurMazeAlgo()">
+      <mat-option *ngFor="let algo of mazeAlgorithems" [value]="algo.value">
+        {{ algo.viewValue }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Path Algorithems</mat-label>
+    <mat-select
+      #select
+      [(value)]="curPathAlgo"
+      (valueChange)="setCurPathAlgo()"
+    >
+      <mat-option *ngFor="let algo of pathAlgorithms" [value]="algo.value">
+        {{ algo.viewValue }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field> -->

@@ -1,0 +1,26 @@
+<button
+  #btn
+  mat-button
+  (click)="goActive()"
+  [matMenuTriggerFor]="menu"
+  [ngClass]="{ mazeMenuBtn: true, active: this.active }"
+  [disabled]="this.isVisualize"
+>
+  <span class="mazeMenuBtn">Maze algorithms</span>
+  <span
+    class="material-symbols-outlined arrow mazeMenuBtn"
+    [ngClass]="{ spin: this.active }"
+  >
+    arrow_drop_up
+  </span>
+</button>
+<mat-menu #menu="matMenu" class="menu">
+  <button mat-menu-item class="menuItem" (click)="kruskal()">Kruskal</button>
+  <button mat-menu-item class="menuItem" (click)="recursiveDivision()">
+    Recursive Division
+  </button>
+  <button mat-menu-item class="menuItem" (click)="prim()">Prim</button>
+  <button mat-menu-item class="menuItem" (click)="weightMaze()">
+    Weight Maze
+  </button>
+</mat-menu>

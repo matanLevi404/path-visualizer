@@ -1,0 +1,25 @@
+<button
+  mat-button
+  [matMenuTriggerFor]="menu"
+  (click)="goActive()"
+  [ngClass]="{ pathMenuBtn: true, active: this.active }"
+  [disabled]="this.isVisualize"
+>
+  <span class="pathMenuBtn">Path algorithms</span
+  ><span
+    class="material-symbols-outlined arrow pathMenuBtn"
+    [ngClass]="{ spin: this.active }"
+  >
+    arrow_drop_up
+  </span>
+</button>
+<mat-menu #menu="matMenu" class="menu">
+  <button mat-menu-item class="menuItem" (click)="dijkstra()">Dijkstra</button>
+  <button mat-menu-item class="menuItem" (click)="aStar()">A Star</button>
+  <button mat-menu-item class="menuItem" (click)="BFS()">
+    Breath first search
+  </button>
+  <button mat-menu-item class="menuItem" (click)="DFS()">
+    Depth first search
+  </button>
+</mat-menu>

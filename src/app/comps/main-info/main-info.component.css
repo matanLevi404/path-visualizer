@@ -1,0 +1,28 @@
+.mainInfo {
+  position: relative;
+  height: 60px;
+  display: flex;
+}
+
+.mainInfo > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 10px;
+}
+
+.mainInfo > div > * {
+  margin: 0 5px;
+}
+
+.start-node span,
+.end-node span {
+  font-weight: 700;
+  color: #1abc9c;
+  font-size: 20px;
+}
+
+.weight-node span {
+  font-size: 18px;
+  font-weight: 700;
+}

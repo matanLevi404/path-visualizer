@@ -1,0 +1,10 @@
+table {
+  width: 100%;
+  height: 70%;
+  border-spacing: 0px;
+  position: relative;
+}
+
+.primSpecial {
+  background-color: darkgray;
+}

@@ -15,7 +15,7 @@ interface SptSetItem {
 export class DijkstraService {
   constructor(private _variablesService: VariablesService) {}
 
-  async dijkstra(board: Cube[][], node: Cube, endNode: Cube, ms: number) {
+  dijkstra(board: Cube[][], node: Cube, endNode: Cube, ms: number) {
     const [rows, cols] = [board.length, board[0].length];
 
     let v = 0;
@@ -25,6 +25,8 @@ export class DijkstraService {
     let dist: number[] = [];
     let sptSet: SptSetItem[] = [];
     let findEnd: boolean = false;
+
+    let visitList: number[][] = [[node.row, node.col]];
 
     const neighbors = [
       [0, 1],
@@ -48,11 +50,7 @@ export class DijkstraService {
       const [r, c] = [sptSet[u].cords[0], sptSet[u].cords[1]];
 
       sptSet[u].isVisit = true;
-
-      if (ms > 0) await timeout(0);
-
-      board[r][c].visited = true;
-      this._variablesService.setBoard(board);
+      visitList.push([r, c]);
 
       for (let i = 0; i < neighbors.length; i++) {
         let [n_r, n_c] = [r + neighbors[i][0], c + neighbors[i][1]];
@@ -66,10 +64,7 @@ export class DijkstraService {
 
         if (sptSet[n_id].isVisit || neighborNode.isBlock) continue;
 
-        if (ms > 0) await timeout(0);
-
-        board[n_r][n_c].visited = true;
-        this._variablesService.setBoard(board);
+        visitList.push([n_r, n_c]);
 
         if (n_r == endNode.row && n_c == endNode.col) {
           sptSet[n_id].parent = sptSet[u].cords;
@@ -90,7 +85,7 @@ export class DijkstraService {
 
     path.unshift([node.row, node.col]);
 
-    await this.drawPath(board, path, ms);
+    return [visitList, path];
   }
 
   private findPath(

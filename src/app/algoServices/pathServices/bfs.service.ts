@@ -9,8 +9,9 @@ import { VariablesService } from 'src/app/services/variables.service';
 export class BFSService {
   constructor(private _variablesService: VariablesService) {}
 
-  async BFS(board: Cube[][], node: Cube, endNode: Cube, ms: number) {
+  BFS(board: Cube[][], node: Cube, endNode: Cube, ms: number) {
     let visited = [];
+    let visitList = [];
     let queue = [];
     let reachTarget = false;
     let pred = [];
@@ -43,10 +44,7 @@ export class BFSService {
         if (this.checkLimits(new_r, new_c, board.length, board[0].length)) {
           if (board[new_r][new_c].isBlock) continue;
 
-          if (ms > 0) await timeout(0);
-
-          board[new_r][new_c].visited = true;
-          this._variablesService.setBoard(board);
+          visitList.push([new_r, new_c]);
 
           let neighborNode = board[new_r][new_c];
 
@@ -71,9 +69,8 @@ export class BFSService {
     const dest = board[er][ec];
 
     path = this.findPath(pred, dest);
-    console.log(path);
 
-    await this.drawPath(path, board, ms);
+    return [visitList, path];
   }
 
   private findPath(pred: number | number[], dest: Cube) {

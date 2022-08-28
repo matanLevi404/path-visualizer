@@ -107,7 +107,7 @@ export class NavbarComponent implements OnInit {
       this.board,
       this.initials,
       this.curPathAlgo,
-      1
+      25
     );
   }
 }

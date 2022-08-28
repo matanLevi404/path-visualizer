@@ -3,6 +3,7 @@ import { AStarService } from '../algoServices/pathServices/a-star.service';
 import { BFSService } from '../algoServices/pathServices/bfs.service';
 import { DFSService } from '../algoServices/pathServices/dfs.service';
 import { DijkstraService } from '../algoServices/pathServices/dijkstra.service';
+import { timeout } from '../helpers/awaitTimeout';
 import { generateAdjencencyList } from '../helpers/generateAdjencencyList';
 import { generateBoard } from '../helpers/generateBoard';
 import { getBoardInitials } from '../helpers/getBoardInitials';
@@ -118,15 +119,19 @@ export class UtilitiesService {
     const startNode = board[sr][sc];
     const endNode = board[er][ec];
 
-    this._variablesService.setIsVisualize(true);
+    if (ms > 0) this._variablesService.setIsVisualize(true);
+
+    let delay = 0;
+    let [visitList, path] = [[], []];
 
     this.clearMarker(board);
     this.clearVisited(board);
     switch (curPathAlgo) {
       case 'BFS!':
-        await this._BFSservice.BFS(board, startNode, endNode, ms);
+        [visitList, path] = this._BFSservice.BFS(board, startNode, endNode, ms);
+        delay = this.drawVisited(board, visitList, ms);
+        await this.drawPath(board, path, delay, ms);
         this._variablesService.setIsVisualize(false);
-
         break;
       case 'DFS!':
         const DFSVariables = { r: sr, c: sc, er, ec, ms, rows, cols, p: 0 };
@@ -134,7 +139,14 @@ export class UtilitiesService {
         this._variablesService.setIsVisualize(false);
         break;
       case 'Dijkstra!':
-        await this._dijkstraService.dijkstra(board, startNode, endNode, ms);
+        [visitList, path] = this._dijkstraService.dijkstra(
+          board,
+          startNode,
+          endNode,
+          ms
+        );
+        delay = this.drawVisited(board, visitList, ms);
+        await this.drawPath(board, path, delay, ms);
         this._variablesService.setIsVisualize(false);
         break;
       case 'A*!':
@@ -143,6 +155,53 @@ export class UtilitiesService {
         break;
       default:
         break;
+    }
+  }
+
+  private drawVisited(board: Cube[][], visitList: number[][], ms: number) {
+    let delay = 0;
+
+    for (let i = 1; i < visitList.length; i++) {
+      const [row, col] = [visitList[i][0], visitList[i][1]];
+
+      if (ms <= 0) {
+        board[row][col].visited = true;
+        this._variablesService.setBoard(board);
+        continue;
+      }
+
+      setTimeout(() => {
+        board[row][col].visited = true;
+        this._variablesService.setBoard(board);
+      }, (delay += 1));
+    }
+
+    return delay;
+  }
+
+  private async drawPath(
+    board: Cube[][],
+    path: number[][],
+    delay: number,
+    ms: number
+  ) {
+    let delay2 = delay;
+
+    await timeout(delay);
+    for (let i = 1; i < path.length; i++) {
+      const [row, col] = [path[i][0], path[i][1]];
+
+      if (ms > 0) await timeout(25);
+
+      board[row][col].marker = true;
+      this._variablesService.setBoard(board);
+
+      // setTimeout(() => {
+      //   board[row][col].marker = true;
+      //   this._variablesService.setBoard(board);
+
+      //   if (i + 1 == path.length) this._variablesService.setIsVisualize(false);
+      // }, (delay += 25));
     }
   }
 }

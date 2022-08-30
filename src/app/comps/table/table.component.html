@@ -5,12 +5,11 @@
       [id]="'node-' + cube.id"
       [ngClass]="{
         cube: true,
+        block: cube.isBlock,
         marker: cube.marker,
         markerNoAnimate: cube.markerNoAnimate,
         visited: cube.visited,
-        visitNoAnimate: cube.visitNoAnimate,
-        active: cube.isBlock || cube.marker || cube.visited,
-        block: cube.isBlock
+        visitNoAnimate: cube.visitNoAnimate
       }"
       cdkDropList
       (cdkDropListDropped)="drop($event)"

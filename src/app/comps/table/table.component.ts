@@ -99,6 +99,8 @@ export class TableComponent implements OnInit, AfterViewInit {
 
     board[row][col].visited = false;
     board[row][col].marker = false;
+    board[row][col].visitNoAnimate = false;
+    board[row][col].markerNoAnimate = false;
 
     board[row][col].isBlock = !board[row][col].isBlock;
 
@@ -114,6 +116,8 @@ export class TableComponent implements OnInit, AfterViewInit {
 
     board[row][col].visited = false;
     board[row][col].marker = false;
+    board[row][col].visitNoAnimate = false;
+    board[row][col].markerNoAnimate = false;
 
     board[row][col].isBlock = !board[row][col].isBlock;
 

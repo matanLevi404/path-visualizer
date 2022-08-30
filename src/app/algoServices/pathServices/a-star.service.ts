@@ -18,7 +18,7 @@ interface OpenListItem {
 export class AStarService {
   constructor(private _variablesService: VariablesService) {}
 
-  async aStar(board: Cube[][], startNode: Cube, endNode: Cube, ms: number) {
+  aStar(board: Cube[][], startNode: Cube, endNode: Cube, ms: number) {
     const [rows, cols] = [board.length, board[0].length];
 
     const [e_r, e_c] = [endNode.row, endNode.col];
@@ -26,6 +26,8 @@ export class AStarService {
 
     let openList: OpenListItem[] = [];
     let closedList = [];
+
+    let visitList: number[][] = [[s_r, s_c]];
 
     let reachTarget: boolean = false;
     let target: OpenListItem;
@@ -54,10 +56,7 @@ export class AStarService {
 
       const [r, c] = [q.cords[0], q.cords[1]];
 
-      if (ms > 0) await timeout(20);
-
-      board[r][c].visited = true;
-      this._variablesService.setBoard(board);
+      visitList.push([r, c]);
 
       for (let i = 0; i < neighbors.length; i++) {
         const [n_r, n_c] = [r + neighbors[i][0], c + neighbors[i][1]];
@@ -83,12 +82,9 @@ export class AStarService {
 
         if (n_r == endNode.row && n_c == endNode.col) {
           target = n_OpenListItem;
-
-          if (ms > 0) await timeout(20);
-
-          board[n_r][n_c].visited = true;
           reachTarget = true;
-          this._variablesService.setBoard(board);
+
+          visitList.push([n_r, n_c]);
         }
 
         if (closedList.find((i) => i.id == neighborNode.id)) continue;
@@ -103,7 +99,9 @@ export class AStarService {
 
     const path = this.findPath(closedList, target);
 
-    await this.drawPath(board, path, ms);
+    path.unshift([s_r, s_c]);
+
+    return [visitList, path];
   }
 
   private findMinF(openList: OpenListItem[]) {
@@ -129,17 +127,6 @@ export class AStarService {
     }
 
     return path;
-  }
-
-  private async drawPath(board: Cube[][], path: number[][], ms: number) {
-    for (let i = 0; i < path.length; i++) {
-      const [r, c] = [path[i][0], path[i][1]];
-
-      if (ms > 0) await timeout(25);
-
-      board[r][c].marker = true;
-      this._variablesService.setBoard(board);
-    }
   }
 
   private checkLimits(

@@ -13,6 +13,7 @@ body {
 .endNode {
   color: #1abc9c;
   font-size: 20px;
+  z-index: 999;
 }
 
 .startNode,
@@ -145,7 +146,6 @@ body {
 
   100% {
     transform: scale(1);
-    /* background-color: #14c9cb; */
     background-color: #0fbed8;
   }
 }

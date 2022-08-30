@@ -6,6 +6,8 @@ import { VariablesService } from 'src/app/services/variables.service';
 interface DFSVariables {
   r: number; // node row
   c: number; // node col
+  sr: number; // node start row
+  sc: number; //node start col
   er: number; // node end row
   ec: number; // node end col
   ms: number; // timeout in milisecons
@@ -20,12 +22,22 @@ interface DFSVariables {
 export class DFSService {
   constructor(private _variablesService: VariablesService) {}
 
-  async DFS(board: Cube[][], DFSVariables: DFSVariables, result: number[][]) {
-    let { r, c, er, ec, ms, rows, cols, p } = { ...DFSVariables };
+  async DFS(board: Cube[][], DFSVariables: DFSVariables, path: number[][]) {
+    let { r, c, er, ec, sr, sc, ms, rows, cols, p } = { ...DFSVariables };
+
+    if (ms > 0) {
+      await timeout(ms);
+      board[r][c].visited = true;
+      this._variablesService.setBoard(board);
+    } else {
+      board[r][c].visitNoAnimate = true;
+      this._variablesService.setBoard(board);
+    }
 
     if (r == er && c == ec) {
       console.log('found target !!');
-      // await this.drawPath(board, result, ms);
+      path.unshift([sr, sc]);
+      await this.drawPath(board, path, ms);
       return true;
     }
 
@@ -48,19 +60,17 @@ export class DFSService {
 
           p += 1;
 
-          result.push([n_r, n_c]);
-          board[n_r][n_c].visited = true;
-          this._variablesService.setBoard(board);
+          path.push([n_r, n_c]);
 
-          DFSVariables = { r: n_r, c: n_c, er, ec, ms, rows, cols, p };
+          DFSVariables = { r: n_r, c: n_c, er, ec, sr, sc, ms, rows, cols, p };
 
-          await this.DFS(board, DFSVariables, result).then(
+          await this.DFS(board, DFSVariables, path).then(
             (value) => (returnedValue = value)
           );
 
           p -= 1;
 
-          result.splice(p, 1);
+          path.splice(p, 1);
         }
       }
     }
@@ -79,7 +89,12 @@ export class DFSService {
     c: number,
     returnedValue: boolean
   ) {
-    if (!board[r][c].visited && !board[r][c].isBlock && !returnedValue)
+    if (
+      !board[r][c].visited &&
+      !board[r][c].visitNoAnimate &&
+      !board[r][c].isBlock &&
+      !returnedValue
+    )
       return true;
     else return false;
   }
@@ -88,10 +103,14 @@ export class DFSService {
     for (let i = 0; i < result.length; i++) {
       const [r, c] = [result[i][0], result[i][1]];
 
-      if (ms > 0) await timeout(ms);
-
-      board[r][c].marker = true;
-      this._variablesService.setBoard(board);
+      if (ms > 0) {
+        await timeout(ms);
+        board[r][c].marker = true;
+        this._variablesService.setBoard(board);
+      } else {
+        board[r][c].markerNoAnimate = true;
+        this._variablesService.setBoard(board);
+      }
     }
   }
 }

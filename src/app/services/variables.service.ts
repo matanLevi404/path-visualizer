@@ -10,7 +10,7 @@ export class VariablesService {
   _curPathAlgo = new BehaviorSubject<string>('BFS');
 
   _board = new BehaviorSubject<Cube[][]>(null);
-  private _adjencencyList = new Subject<Edge[]>();
+  _adjencencyList = new BehaviorSubject<Edge[]>(null);
 
   _initials = new BehaviorSubject<Initials>(null);
 

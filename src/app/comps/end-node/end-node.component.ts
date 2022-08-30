@@ -18,17 +18,7 @@ import { VariablesService } from 'src/app/services/variables.service';
   styleUrls: ['./end-node.component.css'],
 })
 export class EndNodeComponent implements OnInit {
-  curPathAlgo: string;
   isVisualize: boolean;
-
-  dargForPath: boolean;
-
-  @Input() endNodeRow: number;
-  @Input() endNodeCol: number;
-
-  board: Cube[][];
-
-  // initials: Initials;
 
   constructor(
     private _variablesService: VariablesService,

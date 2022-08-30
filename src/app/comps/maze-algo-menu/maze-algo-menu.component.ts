@@ -24,26 +24,9 @@ export class MazeAlgoMenuComponent implements OnInit {
 
   active: boolean = false;
 
-  board: Cube[][];
-  adjencencyList: Edge[];
-
-  initials: Initials;
-
   isVisualize: boolean = false;
 
   ngOnInit(): void {
-    this._variablesService.board$.subscribe((board) => {
-      this.board = board;
-    });
-
-    this._variablesService.adjencencyList$.subscribe((adjencencyList) => {
-      this.adjencencyList = adjencencyList;
-    });
-
-    this._variablesService.initials$.subscribe((initials) => {
-      this.initials = initials;
-    });
-
     this._variablesService.isVisualize$.subscribe((isVisualize) => {
       this.isVisualize = isVisualize;
     });
@@ -63,35 +46,40 @@ export class MazeAlgoMenuComponent implements OnInit {
   }
 
   async recursiveDivision() {
-    this._utilities.clearBoard(this.board);
+    let board = this._variablesService._board.getValue();
+    let initials = this._variablesService._initials.getValue();
+    this._utilities.clearBoard(board);
     this._variablesService.setIsVisualize(true);
-    await this._recursiveDivisionService.recursiveDivision(
-      this.board,
-      this.initials
-    );
+    await this._recursiveDivisionService.recursiveDivision(board, initials);
     this._variablesService.setIsVisualize(false);
   }
 
   async kruskal() {
-    this._utilities.clearBoard(this.board);
+    let board = this._variablesService._board.getValue();
+    let adjencencyList = this._variablesService._adjencencyList.getValue();
+    this._utilities.clearBoard(board);
     this._variablesService.setIsVisualize(true);
-    await this._kruskalService.kruskal(this.board, this.adjencencyList);
+    await this._kruskalService.kruskal(board, adjencencyList);
     this._variablesService.setIsVisualize(false);
   }
 
   prim() {
-    const [sr, sc] = [this.initials.startNodeRow, this.initials.startNodeCol];
-    const startNode = this.board[sr][sc];
+    let board = this._variablesService._board.getValue();
+    let initials = this._variablesService._initials.getValue();
 
-    this._utilities.clearBoard(this.board);
+    const [sr, sc] = [initials.startNodeRow, initials.startNodeCol];
+    const startNode = board[sr][sc];
+
+    this._utilities.clearBoard(board);
     this._variablesService.setIsVisualize(true);
-    this._primService.prim(this.board, startNode);
+    this._primService.prim(board, startNode);
     this._variablesService.setIsVisualize(false);
   }
 
   weightMaze() {
-    this._utilities.clearBoard(this.board);
-    this.board = weightBoard(this.board);
-    this._variablesService.setBoard(this.board);
+    let board = this._variablesService._board.getValue();
+    this._utilities.clearBoard(board);
+    board = weightBoard(board);
+    this._variablesService.setBoard(board);
   }
 }

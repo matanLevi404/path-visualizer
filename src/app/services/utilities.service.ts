@@ -46,6 +46,8 @@ export class UtilitiesService {
         cube.isBlock = false;
         cube.visited = false;
         cube.marker = false;
+        cube.visitNoAnimate = false;
+        cube.markerNoAnimate = false;
         cube.weight = 1;
       })
     );
@@ -59,7 +61,8 @@ export class UtilitiesService {
       row.map((cube) => {
         cube.visited = false;
         cube.marker = false;
-        cube.weight = 1;
+        cube.visitNoAnimate = false;
+        cube.markerNoAnimate = false;
       })
     );
 
@@ -131,6 +134,7 @@ export class UtilitiesService {
 
     this.clearMarker(board);
     this.clearVisited(board);
+
     switch (curPathAlgo) {
       case 'BFS!':
         [visitList, path] = this._BFSservice.BFS(board, startNode, endNode, ms);
@@ -139,7 +143,20 @@ export class UtilitiesService {
         this._variablesService.setIsVisualize(false);
         break;
       case 'DFS!':
-        const DFSVariables = { r: sr, c: sc, er, ec, ms, rows, cols, p: 0 };
+        const DFSVariables = {
+          r: sr,
+          c: sc,
+          er,
+          ec,
+          sr,
+          sc,
+          ms,
+          rows,
+          cols,
+          p: 0,
+        };
+        visitList.push([sr, sc]);
+        path.push([sr, sc]);
         await this._DFSservice.DFS(board, DFSVariables, []);
         this._variablesService.setIsVisualize(false);
         break;
@@ -155,7 +172,15 @@ export class UtilitiesService {
         this._variablesService.setIsVisualize(false);
         break;
       case 'A*!':
-        await this._aStarService.aStar(board, startNode, endNode, ms);
+        [visitList, path] = this._aStarService.aStar(
+          board,
+          startNode,
+          endNode,
+          ms
+        );
+        ms = ms > 0 ? ms + 10 : 0;
+        delay = this.drawVisited(board, visitList, ms);
+        await this.drawPath(board, path, delay, ms);
         this._variablesService.setIsVisualize(false);
         break;
       default:
@@ -178,7 +203,7 @@ export class UtilitiesService {
       setTimeout(() => {
         board[row][col].visited = true;
         this._variablesService.setBoard(board);
-      }, (delay += 1));
+      }, (delay += ms));
     }
 
     return delay;
@@ -190,14 +215,12 @@ export class UtilitiesService {
     delay: number,
     ms: number
   ) {
-    let delay2 = delay;
-
-    await timeout(delay);
+    if (ms > 0) await timeout(delay);
     for (let i = 1; i < path.length; i++) {
       const [row, col] = [path[i][0], path[i][1]];
 
       if (ms > 0) {
-        await timeout(25);
+        await timeout(ms + 24);
         board[row][col].marker = true;
         this._variablesService.setBoard(board);
       } else {

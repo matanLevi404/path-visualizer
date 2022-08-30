@@ -81,12 +81,9 @@ export class BFSService {
     let walk = dest.id;
 
     while (walk != -1) {
-      console.log(walk);
       path.unshift(pred[walk][1]);
       walk = pred[walk][0];
     }
-
-    console.log(pred[walk]);
 
     path.push([er, ec]);
 

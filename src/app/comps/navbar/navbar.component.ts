@@ -63,6 +63,7 @@ export class NavbarComponent implements OnInit {
     });
 
     this._variablesService.initials$.subscribe((initials) => {
+      console.log(initials, 'from navbar');
       this.initials = initials;
     });
 
@@ -103,9 +104,11 @@ export class NavbarComponent implements OnInit {
   async visualizePath() {
     this._variablesService.setDragForPath(true);
 
+    let initials = this._variablesService._initials.getValue();
+
     await this._utilities.visualizePath(
       this.board,
-      this.initials,
+      initials,
       this.curPathAlgo,
       25
     );

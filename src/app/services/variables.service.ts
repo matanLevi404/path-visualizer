@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import { Cube, Edge, Initials } from '../interfaces/iterfaces';
 
 @Injectable({
@@ -7,16 +7,16 @@ import { Cube, Edge, Initials } from '../interfaces/iterfaces';
 })
 export class VariablesService {
   private _curMazeAlgo = new Subject<string>();
-  private _curPathAlgo = new BehaviorSubject<string>('BFS');
+  _curPathAlgo = new BehaviorSubject<string>('BFS');
 
-  private _board = new Subject<Cube[][]>();
+  _board = new BehaviorSubject<Cube[][]>(null);
   private _adjencencyList = new Subject<Edge[]>();
 
-  private _initials = new Subject<Initials>();
+  _initials = new BehaviorSubject<Initials>(null);
 
   private _isVisualize = new Subject<boolean>();
 
-  private _dragForPath = new BehaviorSubject<boolean>(false);
+  _dragForPath = new BehaviorSubject<boolean>(false);
 
   private _pathWeight = new BehaviorSubject<number>(0);
 
@@ -57,6 +57,7 @@ export class VariablesService {
   }
 
   setInitials(initials: Initials) {
+    console.log('Initials', initials);
     this._initials.next(initials);
   }
 

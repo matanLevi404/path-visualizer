@@ -30,10 +30,10 @@ import { MainInfoComponent } from './comps/main-info/main-info.component';
 @NgModule({
   declarations: [
     AppComponent,
+    EndNodeComponent,
     NavbarComponent,
     TableComponent,
     StartNodeComponent,
-    EndNodeComponent,
     WeightNodeComponent,
     MazeAlgoMenuComponent,
     PathAlgoMenuComponent,
@@ -51,10 +51,10 @@ import { MainInfoComponent } from './comps/main-info/main-info.component';
     MatMenuModule,
   ],
   providers: [
-    VariablesService,
     UtilitiesService,
     RecursiveDivisionService,
     KruskalService,
+    VariablesService,
     BFSService,
     DFSService,
     PrimService,

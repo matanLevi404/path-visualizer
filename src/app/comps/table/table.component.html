@@ -6,7 +6,9 @@
       [ngClass]="{
         cube: true,
         marker: cube.marker,
+        markerNoAnimate: cube.markerNoAnimate,
         visited: cube.visited,
+        visitNoAnimate: cube.visitNoAnimate,
         active: cube.isBlock || cube.marker || cube.visited,
         block: cube.isBlock
       }"
@@ -17,18 +19,8 @@
       (mouseenter)="onMouseEnter(cube)"
       (mouseup)="onMouseUp()"
     >
-      <app-start-node
-        *ngIf="cube.startNode"
-        [initials]="initials"
-        [board]="board"
-      ></app-start-node>
-      <app-end-node
-        *ngIf="cube.endNode"
-        [initials]="initials"
-        [board]="board"
-        [endNodeRow]="initials.endNodeRow"
-        [endNodeCol]="initials.endNodeCol"
-      ></app-end-node>
+      <app-start-node *ngIf="cube.startNode"></app-start-node>
+      <app-end-node *ngIf="cube.endNode"></app-end-node>
       <app-weight-node
         *ngIf="cube.weight > 13 ? true : false"
       ></app-weight-node>

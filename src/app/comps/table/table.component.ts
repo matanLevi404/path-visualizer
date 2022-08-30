@@ -1,5 +1,6 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -18,17 +19,12 @@ import { VariablesService } from 'src/app/services/variables.service';
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css'],
 })
-export class TableComponent implements OnInit {
+export class TableComponent implements OnInit, AfterViewInit {
   board: Cube[][] = [];
-  adjencencyList: Edge[] = [];
-
-  initials: Initials;
 
   mouseDown: boolean = false;
 
   isVisualize: boolean;
-
-  manualWeight: number;
 
   localSession: string = 'localSession';
 
@@ -44,16 +40,8 @@ export class TableComponent implements OnInit {
       this.board = board;
     });
 
-    this._variablesService.adjencencyList$.subscribe((adjencencyList) => {
-      this.adjencencyList = adjencencyList;
-    });
-
     this._variablesService.isVisualize$.subscribe((isVisualize) => {
       this.isVisualize = isVisualize;
-    });
-
-    this._variablesService.manualPathWeight$.subscribe((manualWeight) => {
-      this.manualWeight = manualWeight;
     });
   }
 
@@ -79,53 +67,57 @@ export class TableComponent implements OnInit {
     }
 
     const boardInitals = getBoardInitials(rows, cols);
-    this.board = generateBoard(boardInitals);
-    this.adjencencyList = generateAdjencencyList(
+    const board = generateBoard(boardInitals);
+    const adjencencyList = generateAdjencencyList(
       boardInitals.rows,
       boardInitals.cols
     );
 
-    this.initials = boardInitals;
+    this._variablesService.setBoard(board);
 
-    this._variablesService.setBoard(this.board);
-
-    this._variablesService.setAdjencency(this.adjencencyList);
+    this._variablesService.setAdjencency(adjencencyList);
 
     this._variablesService.setInitials(boardInitals);
   }
 
   drop(event: CdkDragDrop<Cube>) {
-    [this.board, this.initials] = dropEvent(event, this.board, this.initials);
+    const initialsValue = this._variablesService._initials.getValue();
+    const boardValue = this._variablesService._board.getValue();
+    const [board, initials] = dropEvent(event, boardValue, initialsValue);
 
-    this._variablesService.setInitials(this.initials);
+    this._variablesService.setInitials(initials);
 
-    this._variablesService.setBoard(this.board);
+    this._variablesService.setBoard(board);
   }
 
   onMouseDown(cube: Cube) {
+    let board = this._variablesService._board.getValue();
+
     if (cube.startNode || cube.endNode || this.isVisualize) return;
     this.mouseDown = true;
     const [row, col] = [cube.row, cube.col];
 
-    this.board[row][col].visited = false;
-    this.board[row][col].marker = false;
+    board[row][col].visited = false;
+    board[row][col].marker = false;
 
-    this.board[row][col].isBlock = !this.board[row][col].isBlock;
+    board[row][col].isBlock = !board[row][col].isBlock;
 
-    this._variablesService.setBoard(this.board);
+    this._variablesService.setBoard(board);
   }
 
   onMouseEnter(cube: Cube) {
+    let board = this._variablesService._board.getValue();
+
     if (!this.mouseDown || cube.startNode || cube.endNode || this.isVisualize)
       return;
     const [row, col] = [cube.row, cube.col];
 
-    this.board[row][col].visited = false;
-    this.board[row][col].marker = false;
+    board[row][col].visited = false;
+    board[row][col].marker = false;
 
-    this.board[row][col].isBlock = !this.board[row][col].isBlock;
+    board[row][col].isBlock = !board[row][col].isBlock;
 
-    this._variablesService.setBoard(this.board);
+    this._variablesService.setBoard(board);
   }
 
   onMouseUp() {

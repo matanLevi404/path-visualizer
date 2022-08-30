@@ -13,7 +13,9 @@ export interface Cube {
   endNode: boolean;
   isBlock: boolean;
   visited: boolean;
+  visitNoAnimate: boolean;
   marker: boolean;
+  markerNoAnimate: boolean;
   weight: number;
   row: number;
   col: number;

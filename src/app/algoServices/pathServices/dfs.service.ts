@@ -25,7 +25,7 @@ export class DFSService {
 
     if (r == er && c == ec) {
       console.log('found target !!');
-      await this.drawPath(board, result, ms);
+      // await this.drawPath(board, result, ms);
       return true;
     }
 

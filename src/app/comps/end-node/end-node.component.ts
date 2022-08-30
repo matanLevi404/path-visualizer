@@ -26,9 +26,9 @@ export class EndNodeComponent implements OnInit {
   @Input() endNodeRow: number;
   @Input() endNodeCol: number;
 
-  @Input() board: Cube[][];
+  board: Cube[][];
 
-  @Input() initials: Initials;
+  // initials: Initials;
 
   constructor(
     private _variablesService: VariablesService,
@@ -37,57 +37,41 @@ export class EndNodeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this._variablesService.board$.subscribe((board) => {
-      this.board = board;
-    });
-
     this._variablesService.isVisualize$.subscribe((isVisualize) => {
       this.isVisualize = isVisualize;
-    });
-
-    this._variablesService.curPathAlgo$.subscribe((pathAlgo) => {
-      this.curPathAlgo = pathAlgo;
-    });
-
-    this._variablesService.initials$.subscribe((initials) => {
-      this.initials = initials;
-    });
-
-    this._variablesService.dargForPath$.subscribe((dargForPath) => {
-      this.dargForPath = dargForPath;
     });
   }
 
   async draggingTarget(event: CdkDragEnter<Cube>) {
-    if (!this.dargForPath) return;
+    let dargForPath = this._variablesService._dragForPath.getValue();
+
+    if (!dargForPath) return;
+
+    let thisCubeWasBlock = false;
 
     let row = event.container.data['row'];
     let col = event.container.data['col'];
 
-    if (this.board[row][col].isBlock) {
-      this.board[row][col].isBlock = false;
-      this._variablesService.setBoard(this.board);
+    let board = this._variablesService._board.getValue();
+    let initials = this._variablesService._initials.getValue();
+    let curPathAlgo = this._variablesService._curPathAlgo.getValue();
 
-      const initials = { ...this.initials, endNodeRow: row, endNodeCol: col };
+    if (row == initials.startNodeRow && col == initials.startNodeCol) return;
 
-      await this._utilities.visualizePath(
-        this.board,
-        initials,
-        this.curPathAlgo,
-        0
-      );
+    if (board[row][col].isBlock) {
+      thisCubeWasBlock = true;
+      board[row][col].isBlock = false;
+      this._variablesService.setBoard(board);
+    }
 
-      this.board[row][col].isBlock = true;
-      this._variablesService.setBoard(this.board);
-    } else {
-      const initials = { ...this.initials, endNodeRow: row, endNodeCol: col };
+    initials.endNodeRow = row;
+    initials.endNodeCol = col;
 
-      await this._utilities.visualizePath(
-        this.board,
-        initials,
-        this.curPathAlgo,
-        0
-      );
+    await this._utilities.visualizePath(board, initials, curPathAlgo, 0);
+
+    if (thisCubeWasBlock) {
+      board[row][col].isBlock = true;
+      this._variablesService.setBoard(board);
     }
 
     this._changeDetectorRef.detectChanges();

@@ -19,7 +19,9 @@ export const generateBoard = ({
         weight: 1,
         isBlock: false,
         visited: false,
+        visitNoAnimate: false,
         marker: false,
+        markerNoAnimate: false,
         row: i,
         col: j,
       };

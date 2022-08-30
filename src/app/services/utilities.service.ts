@@ -24,11 +24,13 @@ export class UtilitiesService {
 
   resetBoard(boardInitals: Initials) {
     const initials = getBoardInitials(boardInitals.rows, boardInitals.cols);
+    console.log(initials, 'from reset BOARD');
     const board = generateBoard(initials);
     const adjencencyList = generateAdjencencyList(
       boardInitals.rows,
       boardInitals.cols
     );
+
     this._variablesService.setDragForPath(false);
 
     this._variablesService.setBoard(board);
@@ -80,6 +82,7 @@ export class UtilitiesService {
     board.map((row) =>
       row.map((cube) => {
         cube.visited = false;
+        cube.visitNoAnimate = false;
       })
     );
 
@@ -90,6 +93,7 @@ export class UtilitiesService {
     board.map((row) =>
       row.map((cube) => {
         cube.marker = false;
+        cube.markerNoAnimate = false;
       })
     );
 
@@ -112,6 +116,7 @@ export class UtilitiesService {
     curPathAlgo: string,
     ms: number
   ) {
+    console.log(initials, 'from visualize path');
     const [sr, sc] = [initials.startNodeRow, initials.startNodeCol];
     const [er, ec] = [initials.endNodeRow, initials.endNodeCol];
     const [rows, cols] = [initials.rows, initials.cols];
@@ -165,7 +170,7 @@ export class UtilitiesService {
       const [row, col] = [visitList[i][0], visitList[i][1]];
 
       if (ms <= 0) {
-        board[row][col].visited = true;
+        board[row][col].visitNoAnimate = true;
         this._variablesService.setBoard(board);
         continue;
       }
@@ -191,17 +196,14 @@ export class UtilitiesService {
     for (let i = 1; i < path.length; i++) {
       const [row, col] = [path[i][0], path[i][1]];
 
-      if (ms > 0) await timeout(25);
-
-      board[row][col].marker = true;
-      this._variablesService.setBoard(board);
-
-      // setTimeout(() => {
-      //   board[row][col].marker = true;
-      //   this._variablesService.setBoard(board);
-
-      //   if (i + 1 == path.length) this._variablesService.setIsVisualize(false);
-      // }, (delay += 25));
+      if (ms > 0) {
+        await timeout(25);
+        board[row][col].marker = true;
+        this._variablesService.setBoard(board);
+      } else {
+        board[row][col].markerNoAnimate = true;
+        this._variablesService.setBoard(board);
+      }
     }
   }
 }

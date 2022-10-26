@@ -18,6 +18,9 @@ import { VariablesService } from 'src/app/services/variables.service';
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css'],
+  host: {
+    '(window:resize)': 'onResize($event)',
+  },
 })
 export class TableComponent implements OnInit, AfterViewInit {
   board: Cube[][] = [];
@@ -46,25 +49,56 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.reset();
+    let height: number = this.divView.nativeElement.offsetHeight;
+    let width: number = this.divView.nativeElement.offsetWidth;
+    let cubeSize: number = 25;
+
+    let windowWidth = window.innerWidth;
+
+    if (windowWidth > 0 && windowWidth <= 480) cubeSize = 10;
+    if (windowWidth > 480 && windowWidth <= 766) cubeSize = 15;
+    if (windowWidth > 766 && windowWidth <= 1023) cubeSize = 20;
+    if (windowWidth > 1023 && windowWidth <= 1200) cubeSize = 25;
+
+    this.reset(height, width, cubeSize);
     this._changeDetectorRef.detectChanges();
   }
 
-  reset() {
+  onResize(event: any) {
+    let windowHeight = event.target.innerHeight;
+    let windowWidth = event.target.innerWidth;
+    let height: number = this.divView.nativeElement.offsetHeight;
+    let width: number = this.divView.nativeElement.offsetWidth;
+    let cubeSize: number = 25;
+
+    if (windowWidth > 0 && windowWidth <= 480) cubeSize = 10;
+    if (windowWidth > 480 && windowWidth <= 766) cubeSize = 15;
+    if (windowWidth > 766 && windowWidth <= 1023) cubeSize = 20;
+    if (windowWidth > 1023 && windowWidth <= 1200) cubeSize = 25;
+
+    console.log('i ws excute');
+
+    this.reset(height, width, cubeSize);
+  }
+
+  reset(height: number, width: number, cubeSize: number) {
     let rows: number;
     let cols: number;
 
     const checker = localStorage.getItem(this.localSession);
+    rows = Math.floor(height / cubeSize);
+    cols = Math.floor(width / cubeSize);
+    localStorage.setItem(this.localSession, JSON.stringify({ rows, cols }));
 
-    if (!checker) {
-      rows = Math.floor(this.divView.nativeElement.offsetHeight / 25);
-      cols = Math.floor(this.divView.nativeElement.offsetWidth / 25);
-      localStorage.setItem(this.localSession, JSON.stringify({ rows, cols }));
-    } else {
-      const savedDimensions = JSON.parse(checker);
-      rows = savedDimensions.rows;
-      cols = savedDimensions.cols;
-    }
+    // if (!checker) {
+    //   rows = Math.floor(this.divView.nativeElement.offsetHeight / 25);
+    //   cols = Math.floor(this.divView.nativeElement.offsetWidth / 25);
+    //   localStorage.setItem(this.localSession, JSON.stringify({ rows, cols }));
+    // } else {
+    //   const savedDimensions = JSON.parse(checker);
+    //   rows = savedDimensions.rows;
+    //   cols = savedDimensions.cols;
+    // }
 
     const boardInitals = getBoardInitials(rows, cols);
     const board = generateBoard(boardInitals);

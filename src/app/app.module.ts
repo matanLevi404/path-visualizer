@@ -26,6 +26,7 @@ import { WeightNodeComponent } from './comps/weight-node/weight-node.component';
 import { MazeAlgoMenuComponent } from './comps/maze-algo-menu/maze-algo-menu.component';
 import { PathAlgoMenuComponent } from './comps/path-algo-menu/path-algo-menu.component';
 import { MainInfoComponent } from './comps/main-info/main-info.component';
+import { LogoComponent } from './comps/logo/logo.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { MainInfoComponent } from './comps/main-info/main-info.component';
     MazeAlgoMenuComponent,
     PathAlgoMenuComponent,
     MainInfoComponent,
+    LogoComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,12 +1,12 @@
 <div class="navbar">
-  <div class="title"><span>Path Visualiser</span></div>
+  <app-logo></app-logo>
   <div class="container">
     <app-maze-algo-menu></app-maze-algo-menu>
     <app-path-algo-menu></app-path-algo-menu>
   </div>
 
   <button
-    class="visualize"
+    class="visualize big"
     mat-raised-button
     color="primary"
     [disabled]="isVisualize"
@@ -39,6 +39,16 @@
       (click)="clearPath()"
     >
       Clear Path
+    </button>
+
+    <button
+      class="visualize small"
+      mat-raised-button
+      color="primary"
+      [disabled]="isVisualize"
+      (click)="visualizePath()"
+    >
+      Visualize {{ this.curPathAlgo }}
     </button>
   </div>
 </div>

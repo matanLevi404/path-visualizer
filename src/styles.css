@@ -30,7 +30,20 @@ body {
   font-size: 18px;
 }
 
+td,
+th {
+  padding: 0;
+}
+
 .cube {
+  position: relative;
+  width: 25px;
+  /* height: 25px; */
+  border: 0.3px solid rgba(0, 0, 0, 0.226);
+  /* border: 1px solid rgb(175, 216, 248); */
+}
+
+.frame-cube {
   position: relative;
   width: 25px;
   height: 25px;
@@ -171,5 +184,12 @@ body {
 
   to {
     transform: scale(0);
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .cube {
+    width: 10px;
+    height: 10px;
   }
 }

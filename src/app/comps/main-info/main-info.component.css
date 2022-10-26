@@ -2,6 +2,8 @@
   position: relative;
   height: 60px;
   display: flex;
+  width: auto;
+  overflow-x: auto;
 }
 
 .mainInfo > div {
@@ -25,4 +27,27 @@
 .weight-node span {
   font-size: 18px;
   font-weight: 700;
+}
+
+.cube {
+  width: 25px;
+  height: 25px;
+  border: none;
+}
+
+.cube::before {
+  content: "";
+  position: absolute;
+  left: -5px;
+  width: 25px;
+  height: 25px;
+  border: 0.3px solid rgba(0, 0, 0, 0.226);
+}
+
+.cube.visited::before,
+.cube.marker::before,
+.cube.block::before {
+  height: 25px;
+  width: 25px;
+  left: -5px;
 }

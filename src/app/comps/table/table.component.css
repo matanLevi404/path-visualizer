@@ -1,10 +1,36 @@
 table {
   width: 100%;
-  height: 70%;
+  height: 80%;
   border-spacing: 0px;
   position: relative;
+  padding: 10px;
 }
 
 .primSpecial {
   background-color: darkgray;
+}
+
+/* Big tablets to 1200px (widths smaller then 1140px row)*/
+@media only screen and (max-width: 1200px) {
+  .small {
+    display: none;
+  }
+}
+
+/* Small tablets to big tablets from 767px - 1023px */
+@media only screen and (max-width: 1023px) {
+  .table {
+    height: 70%;
+  }
+}
+
+/* Small phones to small tablets from 481px - 767px */
+@media only screen and (max-width: 767px) {
+  .table {
+    height: 60%;
+  }
+}
+
+/* Small phones from 0 - 480px */
+@media only screen and (max-width: 480px) {
 }
